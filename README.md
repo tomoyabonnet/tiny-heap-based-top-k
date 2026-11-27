@@ -19,3 +19,10 @@ Streaming observations often arrive faster than they can be stored. Keeping only
 ## Edge case
 
 Ties are not displaced. If the heap is full and a new observation equals the current minimum, the new observation is discarded. That keeps the first-seen values in the top K and avoids unnecessary heap churn. The tracker also rejects a non-positive capacity and a non-integer capacity at construction time, so an empty tracker cannot be created by accident.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
